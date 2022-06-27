@@ -1,4 +1,4 @@
-RiViT: a pipeline for computing RiboViral phylogenetic Trees
+RiViT: a pipeline for building RiboViral phylogenetic Trees
 
 The following software dependencies must be installed and made available in the path: curl, wget, hmmer, parallel, mafft, usearch, muscle, hhalign (with -all option), phylip (neighbor), modeltest-ng, iqtree2, taxonkit. The Java software jaligner is included in the src directory.
 
