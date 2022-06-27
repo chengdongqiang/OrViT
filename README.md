@@ -3,6 +3,10 @@
 ### **Prerequisites**
 The following software dependencies must be installed and made available in the path: curl, wget, hmmer, parallel, mafft, usearch, muscle, hhalign (with -all option), phylip (neighbor), modeltest-ng, iqtree2, taxonkit. The Java software jaligner is included in the src directory.
 
+The GNU Make Standard Library (gmsl) was included in RiViT/src. The gmsl by John Graham-Cumming was downloaded from http://gmsl.sourceforge.net
+
+The JAligner (Open source Java implementation of Smith-Waterman) was also included in RiViT/src. The JAligner by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
+
 Makefile with the default option CPU=50. Users can change this parameter as their owns.
 
 We recommend the use of a terminal multiplexer such as ‘screen’ to ensure the completion of the long-running task.
