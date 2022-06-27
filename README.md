@@ -21,3 +21,5 @@ The global tree based on sequences only from the RefSeq viral proteins database 
 The outputs will be available in RiViT/results directory. RiViT.refseq.aln and RiViT.ownseq_refseq.aln contain the multiple sequence alignments of the RdRp core domain. RiViT.refseq.tre and RiViT.ownseq_refseq.tre are the phylogenetic trees based on these alignments.
 
 Makefile with the default option CPU=50. Users can change this parameter as their owns.
+
+test
