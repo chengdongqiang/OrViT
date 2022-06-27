@@ -22,4 +22,3 @@ The outputs will be available in RiViT/results directory. RiViT.refseq.aln and R
 
 Makefile with the default option CPU=50. Users can change this parameter as their owns.
 
-test
