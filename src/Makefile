@@ -1,4 +1,4 @@
-###This tool will produce the OrthornaViriae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
+###This tool will produce the OrthornaVirae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
 ###Dong-Qiang Cheng (Email: chengdongqiang@gmail.com), Federico M. Lauro (Email: flauro@ntu.edu.sg)
 
 ### GNU Make Standard Library (gmsl) by John Graham-Cumming was downloaded from http://gmsl.sourceforge.net -- put both gmsl and __gmsl in the same directory
