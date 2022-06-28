@@ -1,4 +1,4 @@
-###This tool will produce the RiboViral phylogenetic Tree (RiViT.refseq.tre or RiViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (RiViT.refseq.aln or RiViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
+###This tool will produce the RiboViral phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
 ###Dong-Qiang Cheng (Email: chengdongqiang@gmail.com), Federico M. Lauro (Email: flauro@ntu.edu.sg)
 
 ### GNU Make Standard Library (gmsl) by John Graham-Cumming was downloaded from http://gmsl.sourceforge.net -- put both gmsl and __gmsl in the same directory
@@ -59,12 +59,12 @@ refseq : CommandsCheck DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqR
 #################################################################################################################################
 
 .PHONY : OwnseqRefseqTreeLeafRename
-OwnseqRefseqTreeLeafRename : $(RESULTS)/RiViT.ownseq_refseq.tre
+OwnseqRefseqTreeLeafRename : $(RESULTS)/OrViT.ownseq_refseq.tre
 
-$(RESULTS)/RiViT.ownseq_refseq.tre : OwnseqRefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
+$(RESULTS)/OrViT.ownseq_refseq.tre : OwnseqRefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename.pl own_ref_hhalign.fasta_checked.fasta.tre protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename_ownseq.pl own_ref_hhalign.fasta_checked.fasta.tre.tre own_hmmsearch_tblout.prot.newid.list
-	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.tre.tre.tre RiViT.ownseq_refseq.tre
+	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.tre.tre.tre OrViT.ownseq_refseq.tre
 
 .PHONY : OwnseqRefseqPhylogenyTree
 OwnseqRefseqPhylogenyTree : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
@@ -82,7 +82,7 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta : $(RESULTS)/own_ref_hhalign.fast
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl own_ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_hhalign_iterations_checked.pl own_ref_hhalign.fasta.consensus own_ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_aln_id_rename_ownseq.pl own_ref_hhalign.fasta_checked.fasta own_hmmsearch_tblout.prot.newid.list
-	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.aln RiViT.ownseq_refseq.aln
+	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.aln OrViT.ownseq_refseq.aln
 
 $(RESULTS)/own_ref_hhalign.fasta : $(RESULTS)/own.eachfatotemplate.hhr.list $(RESULTS)/own_RDRP_domain.fasta.motifchecked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl own_RDRP_domain.fasta.motifchecked.fasta
@@ -133,11 +133,11 @@ $(RESULTS)/own_proteins.fasta : $(RESULTS)/own_contigs.fasta
 	cd $(RESULTS) && sleep 10 && rm split* list
 
 .PHONY : RefseqTreeLeafRename
-RefseqTreeLeafRename : $(RESULTS)/RiViT.refseq.tre
+RefseqTreeLeafRename : $(RESULTS)/OrViT.refseq.tre
 
-$(RESULTS)/RiViT.refseq.tre : RefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
+$(RESULTS)/OrViT.refseq.tre : RefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename.pl ref_hhalign.fasta_checked.fasta.tre protid_taxid_rank.list
-	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.tre.tre RiViT.refseq.tre
+	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.tre.tre OrViT.refseq.tre
 
 .PHONY : RefseqAnnotation
 RefseqAnotation : $(RESULTS)/protid_taxid_rank.list
@@ -167,7 +167,7 @@ RefseqAlnNotPassedFas : $(RESULTS)/ref_hhalign.fasta_checked.fasta
 $(RESULTS)/ref_hhalign.fasta_checked.fasta : $(RESULTS)/ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_hhalign_iterations_checked.pl ref_hhalign.fasta.consensus ref_hhalign.fasta
-	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta RiViT.refseq.aln
+	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta OrViT.refseq.aln
 
 $(RESULTS)/ref_hhalign.fasta : $(RESULTS)/r2.eachfatotemplate.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl refseq_RDRP_domain.fasta
