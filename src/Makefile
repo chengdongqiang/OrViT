@@ -102,7 +102,7 @@ $(RESULTS)/own_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/own.eachfatotem
 $(RESULTS)/own.eachfatotemplate.hhr.list : $(RESULTS)/own_RDRP_domain.fasta $(RESULTS)/ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl own_RDRP_domain.fasta
 	cd $(RESULTS) && bash $(SRC)/my_output_hhalign_eachfatotemplate_cmd.sh ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m hhalign_eachfatotemplate_cmd split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_eachfatotemplate_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >own.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl own.eachfatotemplate.hhr
@@ -113,7 +113,7 @@ OwnseqCutRDRPDomain : $(RESULTS)/own_RDRP_domain.fasta
 
 $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl own_hmmsearch_tblout.prot.fasta
-	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m log.fas_split_each_fa.log split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n log.fas_split_each_fa.log split && ls split* >list
 	cd $(RESULTS) && echo "RefseqID	BestJalignerPDBID	BestJalignerScore	CutDomainLength">own_log.jaligner.log && parallel -j$(CPU) bash $(SRC)/my_cut_RDRP_domain.sh $(SRC) {} own_log.jaligner.log :::: list
 	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >own_RDRP_domain.fasta
 	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
@@ -146,7 +146,7 @@ $(RESULTS)/protid_taxid_rank.list : $(RESULTS)/refseq_hmmsearch_tblout.prot.fast
 	cd $(RESULTS) && curl -O ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.FULL.gz
 	cd $(RESULTS) && gunzip prot.accession2taxid.FULL.gz
 	cd $(RESULTS) && cp refseq_hmmsearch_tblout.prot.list protid.list
-	cd $(RESULTS) && l=$$(wc -l protid.list | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m protid.list split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l protid.list | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n protid.list split && ls split* >list
 	cd $(RESULTS) && echo >protid_to_taxid.list && parallel -j$(CPU) bash $(SRC)/my_protid_to_taxid.sh {} :::: list
 	cd $(RESULTS) && awk -F '\t' '{print $$2}' protid_to_taxid.list | taxonkit reformat -I 1 -f "{k}|{p}|{c}|{o}|{f}|{g}|{s}" >taxid_to_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_protid_taxid_rank.pl
@@ -178,7 +178,7 @@ $(RESULTS)/ref_hhalign.fasta : $(RESULTS)/r2.eachfatotemplate.hhr.list
 $(RESULTS)/r2.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(RESULTS)/r2.hhalign_iterations.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl refseq_RDRP_domain.fasta
 	cd $(RESULTS) && bash $(SRC)/my_output_hhalign_eachfatotemplate_cmd.sh r2.hhalign_iterations.fasta_checked.fasta
-	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m hhalign_eachfatotemplate_cmd split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_eachfatotemplate_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r2.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r2.eachfatotemplate.hhr
@@ -209,7 +209,7 @@ $(RESULTS)/r2.upgma.nwk : $(RESULTS)/r2.all.hhr.list
 
 $(RESULTS)/r2.all.hhr.list : $(RESULTS)/r2.log.usearch_muscle.log
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $${n} ${hhalign_M} hhalign_allpairs_cmd
-	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m hhalign_allpairs_cmd split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_allpairs_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r2.all.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r2.all.hhr
@@ -238,7 +238,7 @@ $(RESULTS)/refseq_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/r1.eachfatot
 $(RESULTS)/r1.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl refseq_RDRP_domain.fasta
 	cd $(RESULTS) && bash $(SRC)/my_output_hhalign_eachfatotemplate_cmd.sh r1.hhalign_iterations.fasta_checked.fasta
-	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m hhalign_eachfatotemplate_cmd split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l hhalign_eachfatotemplate_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_eachfatotemplate_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r1.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r1.eachfatotemplate.hhr
@@ -269,7 +269,7 @@ $(RESULTS)/r1.upgma.nwk : $(RESULTS)/r1.all.hhr.list
 
 $(RESULTS)/r1.all.hhr.list : $(RESULTS)/r1.log.usearch_muscle.log
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $${n} ${hhalign_M} hhalign_allpairs_cmd
-	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m hhalign_allpairs_cmd split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_allpairs_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r1.all.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r1.all.hhr
@@ -297,7 +297,7 @@ RefseqCutRDRPDomain : $(RESULTS)/refseq_RDRP_domain.fasta
 
 $(RESULTS)/refseq_RDRP_domain.fasta : $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl refseq_hmmsearch_tblout.prot.fasta
-	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && split -l $$m log.fas_split_each_fa.log split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n log.fas_split_each_fa.log split && ls split* >list
 	cd $(RESULTS) && echo "RefseqID	BestJalignerPDBID	BestJalignerScore	CutDomainLength">ref_log.jaligner.log && parallel -j$(CPU) bash $(SRC)/my_cut_RDRP_domain.sh $(SRC) {} ref_log.jaligner.log :::: list
 	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >refseq_RDRP_domain.fasta
 	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
