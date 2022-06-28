@@ -1,4 +1,4 @@
-# **OrViT: a pipeline for building OrthornaVirae phylogenetic Trees**
+## **OrViT: a pipeline for building OrthornaVirae phylogenetic Trees**
 
 ### **Prerequisites**
 The following software dependencies must be installed and made available in the path: curl, wget, hmmer, parallel, mafft, usearch, muscle, hhalign (with -all option), phylip (neighbor), modeltest-ng, iqtree2, taxonkit. The Java software jaligner is included in the src directory.
