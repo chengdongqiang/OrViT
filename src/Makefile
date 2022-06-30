@@ -21,6 +21,7 @@ IQTREENMAX := 2000
 SRC := ../src
 RESULTS := ../results
 CONTIGS := ../results/own_contigs.fasta
+SEQTYPE := nuc
 
 #prerequisite installations: curl wget hmmer parallel mafft usearch muscle hhalign phylip(neighbor) prodigal modeltest-ng iqtree2 usearch taxonkit jaligner(java)
 ##install taxonkit
@@ -52,7 +53,7 @@ HMMFILES := $(patsubst %,$(RESULTS)/%_convert.hmm,$(HMMS))
 
 #################################################################################################################################
 .PHONY : all
-all : CommandsCheck Ownseq DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqRDRPDomainStrictFilter Refseq.r1.WolfMethod RefseqRDRPDomainMotifCheck Refseq.r2.WolfMethod RefseqAlnNotPassedFas OwnseqStarrMethod OwnseqCutRDRPDomain OwnseqRDRPDomainMotifCheck OwnseqAlnToRefseq OwnseqRefseqPhylogenyTree RefseqAnnotation OwnseqRefseqTreeLeafRename
+all : CommandsCheck Owncontigs DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqRDRPDomainStrictFilter Refseq.r1.WolfMethod RefseqRDRPDomainMotifCheck Refseq.r2.WolfMethod RefseqAlnNotPassedFas Ownseq OwnseqStarrMethod OwnseqCutRDRPDomain OwnseqRDRPDomainMotifCheck OwnseqAlnToRefseq OwnseqRefseqPhylogenyTree RefseqAnnotation OwnseqRefseqTreeLeafRename
 
 .PHONY : refseq
 refseq : CommandsCheck DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqRDRPDomainStrictFilter Refseq.r1.WolfMethod RefseqRDRPDomainMotifCheck Refseq.r2.WolfMethod RefseqAlnNotPassedFas RefseqPhylogenyTree RefseqAnnotation RefseqTreeLeafRename
@@ -126,12 +127,28 @@ $(RESULTS)/own_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/own_p
 	cd $(RESULTS) && perl $(SRC)/my_own_hmmsearch_tblout_id_to_fas.pl own_hmmsearch_tblout own_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm own_hmmsearch_out own_hmmsearch_tblout
 
-$(RESULTS)/own_proteins.fasta : $(RESULTS)/own_contigs.fasta
+.PHONY : Ownseq
+.PHONY : Ownseq_nuc
+.PHONY : Ownseq_pro
+
+$(RESULTS)/own_proteins.fasta : Ownseq
+
+ifeq ($(SEQTYPE),nuc)
+Ownseq : Ownseq_nuc
+else
+Ownseq : Ownseq_pro
+endif
+
+Ownseq_nuc :  $(RESULTS)/own_contigs.fasta
 	cd $(RESULTS) && l=$$(wc -l own_contigs.fasta| cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+2)) && split -l $$n own_contigs.fasta split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) prodigal -i {} -o {}.prodigal.gbk -a {}.prodigal_proteins.fas -d {}.prodigal_genes.fas -p meta :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.prodigal_proteins.fas >own_proteins.fasta && cat split*.prodigal.gbk >own_proteins.gbk && cat split*.prodigal_genes.fas >own_proteins.genes.fasta
 	cd $(RESULTS) && sleep 10 && rm split* list
 
+Ownseq_pro : $(RESULTS)/own_contigs.fasta
+	cd $(RESULTS) && cp own_contigs.fasta own_proteins.fasta
+
+	
 .PHONY : RefseqTreeLeafRename
 RefseqTreeLeafRename : $(RESULTS)/OrViT.refseq.tre
 
@@ -330,11 +347,11 @@ $(RESULTS)/Cystoviridae_convert.hmm : | $(RESULTS)
 	cd $(RESULTS) && wget -c https://figshare.com/ndownloader/files/15584354 -O Cystoviridae.hmm
 	cd $(RESULTS) && hmmconvert Cystoviridae.hmm >Cystoviridae_convert.hmm && rm Cystoviridae.hmm
 
-.PHONY : Ownseq
+.PHONY : Owncontigs
 Ownseq : $(RESULTS)/own_contigs.fasta
 
 $(RESULTS)/own_contigs.fasta : | $(RESULTS)
-	@cd $(RESULTS) && test -s $(CONTIGS) || { echo "CONTIGS file path not correct! Exiting... Usage: make CONTIGS=/path/to/your/contigs.fasta"; exit 1; }
+	@cd $(RESULTS) && test -s $(CONTIGS) || { echo "CONTIGS file path not correct! Exiting... Usage: make CONTIGS=/path/to/your/contigs.fasta or make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro"; exit 1; }
 	cd $(RESULTS) && perl $(SRC)/my_fastooneline.pl $(CONTIGS) own_contigs.fasta
 
 .PHONY : CommandsCheck
