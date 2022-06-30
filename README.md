@@ -22,7 +22,7 @@ cd OrViT/src
 ```
 make CONTIGS=/path/to/your/contigs.fasta
 ```
-or user's input contigs as protein sequences:
+Or user's input contigs as protein sequences:
 ```
 make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro
 ```
