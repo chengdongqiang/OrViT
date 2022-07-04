@@ -348,7 +348,7 @@ $(RESULTS)/Cystoviridae_convert.hmm : | $(RESULTS)
 	cd $(RESULTS) && hmmconvert Cystoviridae.hmm >Cystoviridae_convert.hmm && rm Cystoviridae.hmm
 
 .PHONY : Owncontigs
-Ownseq : $(RESULTS)/own_contigs.fasta
+Owncontigs : $(RESULTS)/own_contigs.fasta
 
 $(RESULTS)/own_contigs.fasta : | $(RESULTS)
 	@cd $(RESULTS) && test -s $(CONTIGS) || { echo "CONTIGS file path not correct! Exiting... Usage: make CONTIGS=/path/to/your/contigs.fasta or make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro"; exit 1; }
