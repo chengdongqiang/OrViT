@@ -53,22 +53,22 @@ HMMFILES := $(patsubst %,$(RESULTS)/%_convert.hmm,$(HMMS))
 
 #################################################################################################################################
 .PHONY : all
-all : CommandsCheck Owncontigs DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqRDRPDomainStrictFilter Refseq.r1.WolfMethod RefseqRDRPDomainMotifCheck Refseq.r2.WolfMethod RefseqAlnNotPassedFas Ownseq OwnseqStarrMethod OwnseqCutRDRPDomain OwnseqRDRPDomainMotifCheck OwnseqAlnToRefseq OwnseqRefseqPhylogenyTree RefseqAnnotation OwnseqRefseqTreeLeafRename
+all : CommandsCheck $(RESULTS)/own_contigs.fasta $(RESULTS)/OrViT.ownseq_refseq.tre
 
 .PHONY : refseq
-refseq : CommandsCheck DownloadHMM RefseqStarrMethod RefseqCutRDRPDomain RefseqRDRPDomainStrictFilter Refseq.r1.WolfMethod RefseqRDRPDomainMotifCheck Refseq.r2.WolfMethod RefseqAlnNotPassedFas RefseqPhylogenyTree RefseqAnnotation RefseqTreeLeafRename
+refseq : CommandsCheck $(RESULTS)/OrViT.refseq.tre
 #################################################################################################################################
 
-.PHONY : OwnseqRefseqTreeLeafRename
-OwnseqRefseqTreeLeafRename : $(RESULTS)/OrViT.ownseq_refseq.tre
+# OwnseqRefseqTreeLeafRename
 
-$(RESULTS)/OrViT.ownseq_refseq.tre : OwnseqRefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
+$(RESULTS)/OrViT.ownseq_refseq.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre $(RESULTS)/protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename.pl own_ref_hhalign.fasta_checked.fasta.tre protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename_ownseq.pl own_ref_hhalign.fasta_checked.fasta.tre.tre own_hmmsearch_tblout.prot.newid.list
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.tre.tre.tre OrViT.ownseq_refseq.tre
 
-.PHONY : OwnseqRefseqPhylogenyTree
-OwnseqRefseqPhylogenyTree : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
+#OwnseqRefseqPhylogenyTree
+
+$(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.iqtree2.tre own_ref_hhalign.fasta_checked.fasta.tre
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
@@ -76,8 +76,7 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_
 	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} --alrt $(IQTREEALRT) -B $(IQTREEBOOTSTRAPNUM) --nmax $(IQTREENMAX) -T AUTO
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.treefile own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
-.PHONY : OwnseqAlnToRefseq
-OwnseqAlnToRefseq : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
+# OwnseqAlnToRefseq
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta : $(RESULTS)/own_ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl own_ref_hhalign.fasta
@@ -91,8 +90,7 @@ $(RESULTS)/own_ref_hhalign.fasta : $(RESULTS)/own.eachfatotemplate.hhr.list $(RE
 	cd $(RESULTS) && bash hhalign_ownseqtorefseq_cmd
 	cd $(RESULTS) && sleep 10 && rm *.fa temp*.fas temp*.psi *.hhr hhalign_ownseqtorefseq_cmd log.fas_split_each_fa.log
 
-.PHONY : OwnseqRDRPDomainMotifCheck
-OwnseqRDRPDomainMotifCheck : $(RESULTS)/own_RDRP_domain.fasta.motifchecked.fasta
+# OwnseqRDRPDomainMotifCheck
 
 $(RESULTS)/own_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/own.eachfatotemplate.hhr.list $(RESULTS)/ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl ref_hhalign.fasta_checked.motiflog own.eachfatotemplate.hhr.list
@@ -109,8 +107,7 @@ $(RESULTS)/own.eachfatotemplate.hhr.list : $(RESULTS)/own_RDRP_domain.fasta $(RE
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl own.eachfatotemplate.hhr
 	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log own.eachfatotemplate.hhr
 
-.PHONY : OwnseqCutRDRPDomain
-OwnseqCutRDRPDomain : $(RESULTS)/own_RDRP_domain.fasta
+# OwnseqCutRDRPDomain
 
 $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl own_hmmsearch_tblout.prot.fasta
@@ -119,45 +116,42 @@ $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >own_RDRP_domain.fasta
 	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
 
-.PHONY : OwnseqStarrMethod
-OwnseqStarrMethod : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
+# OwnseqStarrMethod
 
 $(RESULTS)/own_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/own_proteins.fasta
 	cd $(RESULTS) && hmmsearch -o own_hmmsearch_out --tblout own_hmmsearch_tblout --cpu $(CPU) -E $(hmmsearch_e) all.hmm own_proteins.fasta
 	cd $(RESULTS) && perl $(SRC)/my_own_hmmsearch_tblout_id_to_fas.pl own_hmmsearch_tblout own_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm own_hmmsearch_out own_hmmsearch_tblout
 
-.PHONY : Ownseq
-.PHONY : Ownseq_nuc
-.PHONY : Ownseq_pro
-
-$(RESULTS)/own_proteins.fasta : Ownseq
+# OwnProteins
 
 ifeq ($(SEQTYPE),nuc)
-Ownseq : Ownseq_nuc
+$(RESULTS)/own_proteins.fasta : $(RESULTS)/own_nuc
 else
-Ownseq : Ownseq_pro
+$(RESULTS)/own_proteins.fasta : $(RESULTS)/own_pro
 endif
 
-Ownseq_nuc :  $(RESULTS)/own_contigs.fasta
+$(RESULTS)/own_nuc :  $(RESULTS)/own_contigs.fasta
 	cd $(RESULTS) && l=$$(wc -l own_contigs.fasta| cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+2)) && split -l $$n own_contigs.fasta split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) prodigal -i {} -o {}.prodigal.gbk -a {}.prodigal_proteins.fas -d {}.prodigal_genes.fas -p meta :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.prodigal_proteins.fas >own_proteins.fasta && cat split*.prodigal.gbk >own_proteins.gbk && cat split*.prodigal_genes.fas >own_proteins.genes.fasta
-	cd $(RESULTS) && sleep 10 && rm split* list
+	cd $(RESULTS) && sleep 10 && touch own_nuc && rm split* list
 
-Ownseq_pro : $(RESULTS)/own_contigs.fasta
+$(RESULTS)/own_pro : $(RESULTS)/own_contigs.fasta
 	cd $(RESULTS) && cp own_contigs.fasta own_proteins.fasta
+	cd $(RESULTS) && sleep 10 && touch own_pro
 
-	
-.PHONY : RefseqTreeLeafRename
-RefseqTreeLeafRename : $(RESULTS)/OrViT.refseq.tre
+$(RESULTS)/own_contigs.fasta : | $(RESULTS)
+	@cd $(RESULTS) && test -s $(CONTIGS) || { echo "CONTIGS file path not correct! Exiting... Usage: make CONTIGS=/path/to/your/contigs.fasta or make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro"; exit 1; }
+	cd $(RESULTS) && perl $(SRC)/my_fastooneline.pl $(CONTIGS) own_contigs.fasta
 
-$(RESULTS)/OrViT.refseq.tre : RefseqPhylogenyTree $(RESULTS)/protid_taxid_rank.list
+# RefseqTreeLeafRename
+
+$(RESULTS)/OrViT.refseq.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta.tre $(RESULTS)/protid_taxid_rank.list
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename.pl ref_hhalign.fasta_checked.fasta.tre protid_taxid_rank.list
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.tre.tre OrViT.refseq.tre
 
-.PHONY : RefseqAnnotation
-RefseqAnotation : $(RESULTS)/protid_taxid_rank.list
+# RefseqAnnotation
 
 $(RESULTS)/protid_taxid_rank.list : $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && curl -O ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.FULL.gz
@@ -169,8 +163,9 @@ $(RESULTS)/protid_taxid_rank.list : $(RESULTS)/refseq_hmmsearch_tblout.prot.fast
 	cd $(RESULTS) && perl $(SRC)/my_protid_taxid_rank.pl
 	cd $(RESULTS) && sleep 10 && rm split* list prot.accession2taxid.FULL protid.list protid_to_taxid.list taxid_to_rank.list
 
-.PHONY : RefseqPhylogenyTree
-RefseqPhylogenyTree : $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre
+# RefseqPhylogenyTree
+
+$(RESULTS)/ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.iqtree2.tre ref_hhalign.fasta_checked.fasta.tre
 
 $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta
@@ -178,8 +173,7 @@ $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.
 	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} --alrt $(IQTREEALRT) -B $(IQTREEBOOTSTRAPNUM) --nmax $(IQTREENMAX) -T AUTO
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.treefile ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
-.PHONY : RefseqAlnNotPassedFas
-RefseqAlnNotPassedFas : $(RESULTS)/ref_hhalign.fasta_checked.fasta
+# RefseqAlnNotPassedFas
 
 $(RESULTS)/ref_hhalign.fasta_checked.fasta : $(RESULTS)/ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl ref_hhalign.fasta
@@ -201,8 +195,7 @@ $(RESULTS)/r2.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r2.eachfatotemplate.hhr
 	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r2.eachfatotemplate.hhr
 
-.PHONY : Refseq.r2.WolfMethod
-Refseq.r2.WolfMethod : $(RESULTS)/r2.hhalign_iterations.fasta_checked.fasta
+# Refseq.r2.WolfMethod
 
 $(RESULTS)/r2.hhalign_iterations.fasta_checked.fasta : $(RESULTS)/r2.hhalign_iterations.fasta
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl r2.hhalign_iterations.fasta
@@ -243,8 +236,7 @@ $(RESULTS)/r2.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.motif
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
 	cd $(RESULTS) && sleep 10 && ls u*.fas >r2.log.usearch_muscle.log && rm u*.fa
 
-.PHONY : RefseqRDRPDomainMotifCheck
-RefseqRDRPDomainMotifCheck : $(RESULTS)/refseq_RDRP_domain.fasta.motifchecked.fasta
+# RefseqRDRPDomainMotifCheck
 
 $(RESULTS)/refseq_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/r1.eachfatotemplate.hhr.list $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl r1.hhalign_iterations.fasta_checked.motiflog r1.eachfatotemplate.hhr.list
@@ -261,8 +253,7 @@ $(RESULTS)/r1.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r1.eachfatotemplate.hhr
 	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r1.eachfatotemplate.hhr
 
-.PHONY : Refseq.r1.WolfMethod
-Refseq.r1.WolfMethod : $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta
+# Refseq.r1.WolfMethod
 
 $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta : $(RESULTS)/r1.hhalign_iterations.fasta
 	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl r1.hhalign_iterations.fasta
@@ -303,14 +294,12 @@ $(RESULTS)/r1.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.filte
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
 	cd $(RESULTS) && sleep 10 && ls u*.fas >r1.log.usearch_muscle.log && rm u*.fa
 
-.PHONY : RefseqRDRPDomainStrictFilter
-RefseqRDRPDomainStrictFilter : $(RESULTS)/refseq_RDRP_domain.fasta.filtered.fasta
+# RefseqRDRPDomainStrictFilter
 
 $(RESULTS)/refseq_RDRP_domain.fasta.filtered.fasta : $(RESULTS)/refseq_RDRP_domain.fasta
 	cd $(RESULTS) && perl $(SRC)/my_RDRP_domain_filtered.pl ref_log.jaligner.log refseq_RDRP_domain.fasta $(1mu2_jaligner_score_cutoff) $(otherpdb_jaligner_score_cutoff) $(cutdomain_length_cutoff)
 
-.PHONY : RefseqCutRDRPDomain
-RefseqCutRDRPDomain : $(RESULTS)/refseq_RDRP_domain.fasta
+# RefseqCutRDRPDomain
 
 $(RESULTS)/refseq_RDRP_domain.fasta : $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl refseq_hmmsearch_tblout.prot.fasta
@@ -319,8 +308,7 @@ $(RESULTS)/refseq_RDRP_domain.fasta : $(RESULTS)/refseq_hmmsearch_tblout.prot.fa
 	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >refseq_RDRP_domain.fasta
 	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
 
-.PHONY : RefseqStarrMethod
-RefseqStarrMethod : $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta
+# RefseqStarrMethod
 
 $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/refseq_viral_proteins.fasta
 	cd $(RESULTS) && hmmsearch -o refseq_hmmsearch_out --tblout refseq_hmmsearch_tblout --cpu $(CPU) -E $(hmmsearch_e) all.hmm refseq_viral_proteins.fasta
@@ -333,8 +321,7 @@ $(RESULTS)/refseq_viral_proteins.fasta : | $(RESULTS)
 	cd $(RESULTS) && sleep 10 && cat viral.*.protein.faa >refseq_viral_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm viral.*.protein.faa
 
-.PHONY : DownloadHMM
-DownloadHMM : $(RESULTS)/all.hmm
+# DownloadHMM
 
 $(RESULTS)/all.hmm : $(HMMFILES) $(RESULTS)/Cystoviridae_convert.hmm
 	cd $(RESULTS) && sleep 10 && cat *_convert.hmm > all.hmm
@@ -346,13 +333,6 @@ $(HMMFILES) : | $(RESULTS)
 $(RESULTS)/Cystoviridae_convert.hmm : | $(RESULTS)
 	cd $(RESULTS) && wget -c https://figshare.com/ndownloader/files/15584354 -O Cystoviridae.hmm
 	cd $(RESULTS) && hmmconvert Cystoviridae.hmm >Cystoviridae_convert.hmm && rm Cystoviridae.hmm
-
-.PHONY : Owncontigs
-Owncontigs : $(RESULTS)/own_contigs.fasta
-
-$(RESULTS)/own_contigs.fasta : | $(RESULTS)
-	@cd $(RESULTS) && test -s $(CONTIGS) || { echo "CONTIGS file path not correct! Exiting... Usage: make CONTIGS=/path/to/your/contigs.fasta or make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro"; exit 1; }
-	cd $(RESULTS) && perl $(SRC)/my_fastooneline.pl $(CONTIGS) own_contigs.fasta
 
 .PHONY : CommandsCheck
 CommandsCheck : | $(RESULTS)
