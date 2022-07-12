@@ -7,16 +7,14 @@ include gmsl
 
 CPU := 50
 
-hmmsearch_e := 0.01
-usearch_id := 0.5
-hhalign_M := 67
-1mu2_jaligner_score_cutoff := 200
-otherpdb_jaligner_score_cutoff := 100
-cutdomain_length_cutoff := 220
+HMMSEARCH_E := 0.01
+USEARCH_ID := 0.5
+HHALIGN_M := 67
+1MU2_JALIGNER_SCORE_CUTOFF := 200
+OTHERPDB_JALIGNER_SCORE_CUTOFF := 100
+CUTDOMAIN_LENGTH_CUTOFF := 220
 
-IQTREEALRT := 2000
-IQTREEBOOTSTRAPNUM :=2000
-IQTREENMAX := 2000
+IQTREE_PARAMETERS := --alrt 2000 -B 2000 --nmax 2000
 
 SRC := ../src
 RESULTS := ../results
@@ -73,7 +71,7 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/own_ref_hhalign.
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i own_ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} --alrt $(IQTREEALRT) -B $(IQTREEBOOTSTRAPNUM) --nmax $(IQTREENMAX) -T AUTO
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T AUTO
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.treefile own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
 # OwnseqAlnToRefseq
@@ -119,7 +117,7 @@ $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 # OwnseqStarrMethod
 
 $(RESULTS)/own_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/own_proteins.fasta
-	cd $(RESULTS) && hmmsearch -o own_hmmsearch_out --tblout own_hmmsearch_tblout --cpu $(CPU) -E $(hmmsearch_e) all.hmm own_proteins.fasta
+	cd $(RESULTS) && hmmsearch -o own_hmmsearch_out --tblout own_hmmsearch_tblout --cpu $(CPU) -E $(HMMSEARCH_E) all.hmm own_proteins.fasta
 	cd $(RESULTS) && perl $(SRC)/my_own_hmmsearch_tblout_id_to_fas.pl own_hmmsearch_tblout own_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm own_hmmsearch_out own_hmmsearch_tblout
 
@@ -170,7 +168,7 @@ $(RESULTS)/ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/ref_hhalign.fasta_ch
 
 $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} --alrt $(IQTREEALRT) -B $(IQTREEBOOTSTRAPNUM) --nmax $(IQTREENMAX) -T AUTO
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T AUTO
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.treefile ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
 # RefseqAlnNotPassedFas
@@ -207,7 +205,7 @@ $(RESULTS)/r2.hhalign_iterations.fasta : $(RESULTS)/r2.upgma.nwk
 	cd $(RESULTS) && sleep 10 && rm n* u*.hhr u*.fas hhalign_iterations_cmd
 
 $(RESULTS)/r2.upgma.nwk : $(RESULTS)/r2.all.hhr.list
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $${n} r2.all.hhr.list
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r2.all.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_distance_to_phylip_input.pl hhalign_distances.matrix
 	cd $(RESULTS) && phylip neighbor <$(SRC)/my_neighbor_parameter
 	cd $(RESULTS) && perl $(SRC)/my_tree_to_oneline.pl
@@ -218,12 +216,12 @@ $(RESULTS)/r2.upgma.nwk : $(RESULTS)/r2.all.hhr.list
 	cd $(RESULTS) && sleep 10 && mv upgma.nwk.temp4 r2.upgma.nwk && rm hhalign_scores.matrix hhalign_distances.matrix hhalign_distances.matrix.phylip_input upgma.nwk.temp* outfile outtree
 
 $(RESULTS)/r2.all.hhr.list : $(RESULTS)/r2.log.usearch_muscle.log
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $${n} ${hhalign_M} hhalign_allpairs_cmd
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $$n $(HHALIGN_M) hhalign_allpairs_cmd
 	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_allpairs_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r2.all.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r2.all.hhr
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_check_undo_hhr.pl $${n} ${hhalign_M} r2.all.hhr.list
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_check_undo_hhr.pl $$n $(HHALIGN_M) r2.all.hhr.list
 	cd $(RESULTS) && bash hhalign_allpairs_cmd >r2.new.hhr
 	cd $(RESULTS) && cat r2.all.hhr r2.new.hhr >r2.all.new.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r2.all.new.hhr
@@ -231,7 +229,7 @@ $(RESULTS)/r2.all.hhr.list : $(RESULTS)/r2.log.usearch_muscle.log
 	cd $(RESULTS) && sleep 10 && rm split* list hhalign_allpairs_cmd r2.all.hhr r2.new.hhr r2.all.new.hhr
 
 $(RESULTS)/r2.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.motifchecked.fasta
-	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.motifchecked.fasta -id $(usearch_id) -msaout u
+	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.motifchecked.fasta -id $(USEARCH_ID) -msaout u
 	cd $(RESULTS) && for i in u*;do mv $$i ./$${i}.fa;done
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
 	cd $(RESULTS) && sleep 10 && ls u*.fas >r2.log.usearch_muscle.log && rm u*.fa
@@ -265,7 +263,7 @@ $(RESULTS)/r1.hhalign_iterations.fasta : $(RESULTS)/r1.upgma.nwk
 	cd $(RESULTS) && sleep 10 && rm n* u*.hhr u*.fas hhalign_iterations_cmd
 
 $(RESULTS)/r1.upgma.nwk : $(RESULTS)/r1.all.hhr.list
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $${n} r1.all.hhr.list
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r1.all.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_distance_to_phylip_input.pl hhalign_distances.matrix
 	cd $(RESULTS) && phylip neighbor <$(SRC)/my_neighbor_parameter
 	cd $(RESULTS) && perl $(SRC)/my_tree_to_oneline.pl
@@ -276,12 +274,12 @@ $(RESULTS)/r1.upgma.nwk : $(RESULTS)/r1.all.hhr.list
 	cd $(RESULTS) && sleep 10 && mv upgma.nwk.temp4 r1.upgma.nwk && rm hhalign_scores.matrix hhalign_distances.matrix hhalign_distances.matrix.phylip_input upgma.nwk.temp* outfile outtree
 
 $(RESULTS)/r1.all.hhr.list : $(RESULTS)/r1.log.usearch_muscle.log
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $${n} ${hhalign_M} hhalign_allpairs_cmd
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_output_hhalign_allpairs_cmd.pl $$n $(HHALIGN_M) hhalign_allpairs_cmd
 	cd $(RESULTS) && l=$$(wc -l hhalign_allpairs_cmd | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n hhalign_allpairs_cmd split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r1.all.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r1.all.hhr
-	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_check_undo_hhr.pl $${n} ${hhalign_M} r1.all.hhr.list
+	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_check_undo_hhr.pl $$n $(HHALIGN_M) r1.all.hhr.list
 	cd $(RESULTS) && bash hhalign_allpairs_cmd >r1.new.hhr
 	cd $(RESULTS) && cat r1.all.hhr r1.new.hhr >r1.all.new.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhrscore_to_list.pl r1.all.new.hhr
@@ -289,7 +287,7 @@ $(RESULTS)/r1.all.hhr.list : $(RESULTS)/r1.log.usearch_muscle.log
 	cd $(RESULTS) && sleep 10 && rm split* list hhalign_allpairs_cmd r1.all.hhr r1.new.hhr r1.all.new.hhr
 
 $(RESULTS)/r1.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.filtered.fasta
-	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.filtered.fasta -id $(usearch_id) -msaout u
+	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.filtered.fasta -id $(USEARCH_ID) -msaout u
 	cd $(RESULTS) && for i in u*;do mv $$i $${i}.fa;done
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
 	cd $(RESULTS) && sleep 10 && ls u*.fas >r1.log.usearch_muscle.log && rm u*.fa
@@ -297,7 +295,7 @@ $(RESULTS)/r1.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.filte
 # RefseqRDRPDomainStrictFilter
 
 $(RESULTS)/refseq_RDRP_domain.fasta.filtered.fasta : $(RESULTS)/refseq_RDRP_domain.fasta
-	cd $(RESULTS) && perl $(SRC)/my_RDRP_domain_filtered.pl ref_log.jaligner.log refseq_RDRP_domain.fasta $(1mu2_jaligner_score_cutoff) $(otherpdb_jaligner_score_cutoff) $(cutdomain_length_cutoff)
+	cd $(RESULTS) && perl $(SRC)/my_RDRP_domain_filtered.pl ref_log.jaligner.log refseq_RDRP_domain.fasta $(1MU2_JALIGNER_SCORE_CUTOFF) $(OTHERPDB_JALIGNER_SCORE_CUTOFF) $(CUTDOMAIN_LENGTH_CUTOFF)
 
 # RefseqCutRDRPDomain
 
@@ -311,7 +309,7 @@ $(RESULTS)/refseq_RDRP_domain.fasta : $(RESULTS)/refseq_hmmsearch_tblout.prot.fa
 # RefseqStarrMethod
 
 $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/refseq_viral_proteins.fasta
-	cd $(RESULTS) && hmmsearch -o refseq_hmmsearch_out --tblout refseq_hmmsearch_tblout --cpu $(CPU) -E $(hmmsearch_e) all.hmm refseq_viral_proteins.fasta
+	cd $(RESULTS) && hmmsearch -o refseq_hmmsearch_out --tblout refseq_hmmsearch_tblout --cpu $(CPU) -E $(HMMSEARCH_E) all.hmm refseq_viral_proteins.fasta
 	cd $(RESULTS) && perl $(SRC)/my_hmmsearch_tblout_id_to_fas.pl refseq_hmmsearch_tblout refseq_viral_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm refseq_hmmsearch_out refseq_hmmsearch_tblout
 
@@ -344,8 +342,8 @@ $(RESULTS) :
 ##############################################################################################################################
 .PHONY : clean
 clean :
-	-cd ${RESULTS} && rm split* list* temp* n* u* outfile outtree ref_hhalign.fasta_checked.fasta.ckp ref_hhalign.fasta_checked.fasta.log ref_hhalign.fasta_checked.fasta.out own_ref_hhalign.fasta_checked.fasta.ckp own_ref_hhalign.fasta_checked.fasta.log own_ref_hhalign.fasta_checked.fasta.out && rm *.fas
+	-cd $(RESULTS) && rm split* list* temp* n* u* outfile outtree ref_hhalign.fasta_checked.fasta.ckp ref_hhalign.fasta_checked.fasta.log ref_hhalign.fasta_checked.fasta.out own_ref_hhalign.fasta_checked.fasta.ckp own_ref_hhalign.fasta_checked.fasta.log own_ref_hhalign.fasta_checked.fasta.out && rm *.fas
 
 .PHONY : cleanall
 cleanall :
-	-cd ${RESULTS} && rm ./*
+	-cd $(RESULTS) && rm ./*
