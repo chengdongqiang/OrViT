@@ -12,7 +12,7 @@ while(<LIST>){
 	chomp $_;
 	@line=split(/\s+/,$_);
 	($s,$e)=$line[8]=~/(.*)-(.*)/;
-	if($line[2]<=0.01 && $s <=$motifs && $e>=$motife){
+	if($line[2]<=$ARGV[2] && $s <=$motifs && $e>=$motife){
 		print OUT $line[0],"\n";
 	}
 }

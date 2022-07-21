@@ -1,4 +1,5 @@
-###This tool will produce the OrthornaVirae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
+###OrViT, a pipeline that integrate and update published methods (Starr’s method (Starr et al., 2019) and Wolf’s method (Wolf et al., 2018)) and bridge various public software (Prodigal (Hyatt et al., 2010), HMMER (hmmer.org), JAligner (Moustafa, 2014), Mafft (Katoh and Standley, 2013), Usearch (Edgar, 2010), MUSCLE (Edgar, 2021), HHsuite (Steinegger et al., 2019), PHYLIP (Felsenstein, 2005), Modeltest-ng (Darriba et al., 2019), IQ-TREE 2 (Minh et al., 2020), and Taxonkit (Shen and Ren, 2021)) to generates a global phylogenetic tree of all Orthornavirae with minimal input from the user. 
+###This pipeline will output the OrthornaVirae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
 ###Dong-Qiang Cheng (Email: chengdongqiang@gmail.com), Federico M. Lauro (Email: flauro@ntu.edu.sg)
 
 ### GNU Make Standard Library (gmsl) by John Graham-Cumming was downloaded from http://gmsl.sourceforge.net -- put both gmsl and __gmsl in the same directory
@@ -13,6 +14,8 @@ HHALIGN_M := 67
 1MU2_JALIGNER_SCORE_CUTOFF := 200
 OTHERPDB_JALIGNER_SCORE_CUTOFF := 100
 CUTDOMAIN_LENGTH_CUTOFF := 220
+REFSEQ_FATOWHOLEALN_HHALIGN_E := 0.01
+OWNSEQ_FATOWHOLEALN_HHALIGN_E := 0.01
 
 IQTREE_PARAMETERS := --alrt 2000 -B 2000 --nmax 2000
 
@@ -86,12 +89,12 @@ $(RESULTS)/own_ref_hhalign.fasta : $(RESULTS)/own.eachfatotemplate.hhr.list $(RE
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl own_RDRP_domain.fasta.motifchecked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_output_hhalign_ordinallyaddfatotemplate_cmd.pl own_RDRP_domain.fasta.motifchecked.fasta own.eachfatotemplate.hhr.list ref_hhalign.fasta_checked.fasta $(SRC) hhalign_ownseqtorefseq_cmd own_ref_hhalign.fasta
 	cd $(RESULTS) && bash hhalign_ownseqtorefseq_cmd
-	cd $(RESULTS) && sleep 10 && rm *.fa temp*.fas temp*.psi *.hhr hhalign_ownseqtorefseq_cmd log.fas_split_each_fa.log
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && find . -type f -name "temp*.fas" -exec rm {} + && find . -type f -name "temp*.psi" -exec rm {} + && find . -type f -name "*.hhr" -exec rm {} + && rm hhalign_ownseqtorefseq_cmd log.fas_split_each_fa.log
 
 # OwnseqRDRPDomainMotifCheck
 
 $(RESULTS)/own_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/own.eachfatotemplate.hhr.list $(RESULTS)/ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl ref_hhalign.fasta_checked.motiflog own.eachfatotemplate.hhr.list
+	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl ref_hhalign.fasta_checked.motiflog own.eachfatotemplate.hhr.list $(OWNSEQ_FATOWHOLEALN_HHALIGN_E)
 	cd $(RESULTS) && perl $(SRC)/my_checked_protid_to_fas.pl own_RDRP_domain.fasta own.eachfatotemplate.hhr.list.checked.protid.list
 	cd $(RESULTS) && mv own.eachfatotemplate.hhr.list.checked.protid.list.fasta own_RDRP_domain.fasta.motifchecked.fasta
 	cd $(RESULTS) && sleep 10 && rm own.eachfatotemplate.hhr.list.checked.protid.list
@@ -103,7 +106,7 @@ $(RESULTS)/own.eachfatotemplate.hhr.list : $(RESULTS)/own_RDRP_domain.fasta $(RE
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >own.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl own.eachfatotemplate.hhr
-	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log own.eachfatotemplate.hhr
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && rm hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log own.eachfatotemplate.hhr
 
 # OwnseqCutRDRPDomain
 
@@ -111,8 +114,9 @@ $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n log.fas_split_each_fa.log split && ls split* >list
 	cd $(RESULTS) && echo "RefseqID	BestJalignerPDBID	BestJalignerScore	CutDomainLength">own_log.jaligner.log && parallel -j$(CPU) bash $(SRC)/my_cut_RDRP_domain.sh $(SRC) {} own_log.jaligner.log :::: list
-	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >own_RDRP_domain.fasta
-	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec cat {} + >own_RDRP_domain.fasta
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec rm {} + && rm split* list log.fas_split_each_fa.log
+
 
 # OwnseqStarrMethod
 
@@ -182,7 +186,7 @@ $(RESULTS)/ref_hhalign.fasta : $(RESULTS)/r2.eachfatotemplate.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl refseq_RDRP_domain.fasta
 	cd $(RESULTS) && perl $(SRC)/my_output_hhalign_ordinallyaddfatotemplate_cmd.pl r2.hhalign_iterations.fasta_checked.notpass.fasta r2.eachfatotemplate.hhr.list r2.hhalign_iterations.fasta_checked.fasta $(SRC) hhalign_notpassedfatotemplate_cmd ref_hhalign.fasta
 	cd $(RESULTS) && bash hhalign_notpassedfatotemplate_cmd
-	cd $(RESULTS) && sleep 10 && rm *.fa temp*.fas temp*.psi *.hhr hhalign_notpassedfatotemplate_cmd log.fas_split_each_fa.log
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && find . -type f -name "temp*.fas" -exec rm {} + && find . -type f -name "temp*.psi" -exec rm {} + && find . -type f -name "*.hhr" -exec rm {} + && rm hhalign_notpassedfatotemplate_cmd log.fas_split_each_fa.log
 
 $(RESULTS)/r2.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(RESULTS)/r2.hhalign_iterations.fasta_checked.fasta
 	cd $(RESULTS) && perl $(SRC)/my_fas_split_each_fa.pl refseq_RDRP_domain.fasta
@@ -191,7 +195,7 @@ $(RESULTS)/r2.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r2.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r2.eachfatotemplate.hhr
-	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r2.eachfatotemplate.hhr
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && && rm hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r2.eachfatotemplate.hhr
 
 # Refseq.r2.WolfMethod
 
@@ -202,7 +206,7 @@ $(RESULTS)/r2.hhalign_iterations.fasta_checked.fasta : $(RESULTS)/r2.hhalign_ite
 $(RESULTS)/r2.hhalign_iterations.fasta : $(RESULTS)/r2.upgma.nwk
 	cd $(RESULTS) && perl $(SRC)/my_output_hhalign_iterations_cmd.pl r2.upgma.nwk $(SRC)
 	cd $(RESULTS) && bash hhalign_iterations_cmd r2.hhalign_iterations.fasta
-	cd $(RESULTS) && sleep 10 && rm n* u*.hhr u*.fas hhalign_iterations_cmd
+	cd $(RESULTS) && sleep 10 && find . -type f -name "n*" -exec rm {} + && find . -type f -name "u*.hhr" -exec rm {} + && find . -type f -name "u*.fas" -exec rm {} + && rm hhalign_iterations_cmd
 
 $(RESULTS)/r2.upgma.nwk : $(RESULTS)/r2.all.hhr.list
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r2.all.hhr.list
@@ -232,12 +236,12 @@ $(RESULTS)/r2.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.motif
 	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.motifchecked.fasta -id $(USEARCH_ID) -msaout u
 	cd $(RESULTS) && for i in u*;do mv $$i ./$${i}.fa;done
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
-	cd $(RESULTS) && sleep 10 && ls u*.fas >r2.log.usearch_muscle.log && rm u*.fa
+	cd $(RESULTS) && sleep 10 && ls u*.fas >r2.log.usearch_muscle.log && find . -type f -name "u*.fa" -exec rm {} +
 
 # RefseqRDRPDomainMotifCheck
 
 $(RESULTS)/refseq_RDRP_domain.fasta.motifchecked.fasta : $(RESULTS)/r1.eachfatotemplate.hhr.list $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta
-	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl r1.hhalign_iterations.fasta_checked.motiflog r1.eachfatotemplate.hhr.list
+	cd $(RESULTS) && perl $(SRC)/my_hhrlist_check.pl r1.hhalign_iterations.fasta_checked.motiflog r1.eachfatotemplate.hhr.list $(REFSEQ_FATOWHOLEALN_HHALIGN_E)
 	cd $(RESULTS) && perl $(SRC)/my_checked_protid_to_fas.pl refseq_RDRP_domain.fasta r1.eachfatotemplate.hhr.list.checked.protid.list
 	cd $(RESULTS) && mv r1.eachfatotemplate.hhr.list.checked.protid.list.fasta refseq_RDRP_domain.fasta.motifchecked.fasta
 	cd $(RESULTS) && sleep 10 && rm r1.eachfatotemplate.hhr.list.checked.protid.list
@@ -249,7 +253,7 @@ $(RESULTS)/r1.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r1.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r1.eachfatotemplate.hhr
-	cd $(RESULTS) && sleep 10 && rm *.fa hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r1.eachfatotemplate.hhr
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && rm hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r1.eachfatotemplate.hhr
 
 # Refseq.r1.WolfMethod
 
@@ -260,7 +264,7 @@ $(RESULTS)/r1.hhalign_iterations.fasta_checked.fasta : $(RESULTS)/r1.hhalign_ite
 $(RESULTS)/r1.hhalign_iterations.fasta : $(RESULTS)/r1.upgma.nwk
 	cd $(RESULTS) && perl $(SRC)/my_output_hhalign_iterations_cmd.pl r1.upgma.nwk $(SRC)
 	cd $(RESULTS) && bash hhalign_iterations_cmd r1.hhalign_iterations.fasta
-	cd $(RESULTS) && sleep 10 && rm n* u*.hhr u*.fas hhalign_iterations_cmd
+	cd $(RESULTS) && sleep 10 && find . -type f -name "n*" -exec rm {} + && find . -type f -name "u*.hhr" -exec rm {} + && find . -type f -name "u*.fas" -exec rm {} + && rm hhalign_iterations_cmd
 
 $(RESULTS)/r1.upgma.nwk : $(RESULTS)/r1.all.hhr.list
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r1.all.hhr.list
@@ -290,7 +294,7 @@ $(RESULTS)/r1.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.filte
 	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.filtered.fasta -id $(USEARCH_ID) -msaout u
 	cd $(RESULTS) && for i in u*;do mv $$i $${i}.fa;done
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
-	cd $(RESULTS) && sleep 10 && ls u*.fas >r1.log.usearch_muscle.log && rm u*.fa
+	cd $(RESULTS) && sleep 10 && find . -type f -name "u*.fas" -exec ls {} + >r1.log.usearch_muscle.log && find . -type f -name "u*.fa" -exec rm {} +
 
 # RefseqRDRPDomainStrictFilter
 
@@ -303,8 +307,8 @@ $(RESULTS)/refseq_RDRP_domain.fasta : $(RESULTS)/refseq_hmmsearch_tblout.prot.fa
 	cd $(RESULTS) && perl ${SRC}/my_fas_split_each_fa.pl refseq_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && l=$$(wc -l log.fas_split_each_fa.log | cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+1)) && split -l $$n log.fas_split_each_fa.log split && ls split* >list
 	cd $(RESULTS) && echo "RefseqID	BestJalignerPDBID	BestJalignerScore	CutDomainLength">ref_log.jaligner.log && parallel -j$(CPU) bash $(SRC)/my_cut_RDRP_domain.sh $(SRC) {} ref_log.jaligner.log :::: list
-	cd $(RESULTS) && sleep 10 && cat *.cut_RDRP_domain.fas >refseq_RDRP_domain.fasta
-	cd $(RESULTS) && sleep 10 && rm *.cut_RDRP_domain.fas split* list log.fas_split_each_fa.log
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec cat {} + >refseq_RDRP_domain.fasta
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec rm {} + && rm split* list log.fas_split_each_fa.log
 
 # RefseqStarrMethod
 
