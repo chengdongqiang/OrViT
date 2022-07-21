@@ -236,7 +236,7 @@ $(RESULTS)/r2.log.usearch_muscle.log : $(RESULTS)/refseq_RDRP_domain.fasta.motif
 	cd $(RESULTS) && usearch -cluster_fast refseq_RDRP_domain.fasta.motifchecked.fasta -id $(USEARCH_ID) -msaout u
 	cd $(RESULTS) && for i in u*;do mv $$i ./$${i}.fa;done
 	-cd $(RESULTS) && for i in u*.fa;do muscle -align $${i} -output $${i}s --threads $(CPU);done
-	cd $(RESULTS) && sleep 10 && ls u*.fas >r2.log.usearch_muscle.log && find . -type f -name "u*.fa" -exec rm {} +
+	cd $(RESULTS) && sleep 10 && find . -type f -name "u*.fas" -exec ls {} + >r2.log.usearch_muscle.log && find . -type f -name "u*.fa" -exec rm {} +
 
 # RefseqRDRPDomainMotifCheck
 
