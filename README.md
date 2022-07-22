@@ -12,11 +12,12 @@ The GNU Make Standard Library (gmsl) was included in OrViT/src. The gmsl by John
 
 The JAligner (Open source Java implementation of Smith-Waterman) was also included in OrViT/src. The JAligner by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
 
+### **Usage **
 The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile. Makefile has some default options, such as CPU=50, IQTREE_CPU=AUTO, HMMSEARCH_E=0.01, OWNSEQ_FATOWHOLEALN_HHALIGN_E=0.01, REFSEQ_FATOWHOLEALN_HHALIGN_E=0.01, which can be specified by the user.
 
 We recommend the use of a terminal multiplexer such as ‘screen’ to ensure the completion of the long-running task.
 
-### **Usage (output as OrViT.ownseq_refseq.tre)**
+#### **output OrViT.ownseq_refseq.tre**
 A global tree based on sequences from both user’s assembled contigs and the RefSeq viral proteins database can be obtained by:
 ```
 git clone https://github.com/chengdongqiang/OrViT.git
@@ -32,7 +33,7 @@ Or user's input contigs as protein sequences:
 make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro
 ```
 
-### **Usage (output as OrViT.refseq.tre)**
+#### **output OrViT.refseq.tre**
 The global tree based on sequences only from the RefSeq viral proteins database can be obtained by:
 
 ```
@@ -45,6 +46,6 @@ cd OrViT/src
 make refseq
 ```
 
-### **Outputs**
+#### **Outputs**
 The outputs will be available in OrViT/results directory. OrViT.refseq.aln and OrViT.ownseq_refseq.aln contain the multiple sequence alignments of the RdRp core domain. OrViT.refseq.tre and OrViT.ownseq_refseq.tre are the phylogenetic trees based on these alignments.
 
