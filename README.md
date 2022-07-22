@@ -12,7 +12,7 @@ The GNU Make Standard Library (gmsl) was included in OrViT/src. The gmsl by John
 
 The JAligner (Open source Java implementation of Smith-Waterman) was also included in OrViT/src. The JAligner by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
 
-The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile. Makefile with the default option CPU=50. Users can change this parameter as their owns.
+The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile. Makefile with the default option CPU=50, which can be specified by the user.
 
 We recommend the use of a terminal multiplexer such as ‘screen’ to ensure the completion of the long-running task.
 
