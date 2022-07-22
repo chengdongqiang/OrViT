@@ -14,7 +14,7 @@ The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile.
 
 We recommend the use of a terminal multiplexer such as ‘screen’ to ensure the completion of the long-running task.
 
-### **Usage (build a OrViT.ownseq_refseq.tre)**
+### **Usage (output as OrViT.ownseq_refseq.tre)**
 A global tree based on sequences from both user’s assembled contigs and the RefSeq viral proteins database can be obtained by:
 ```
 git clone https://github.com/chengdongqiang/OrViT.git
@@ -30,7 +30,7 @@ Or user's input contigs as protein sequences:
 make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro
 ```
 
-### **Usage (build a OrViT.refseq.tre)**
+### **Usage (output as OrViT.refseq.tre)**
 The global tree based on sequences only from the RefSeq viral proteins database can be obtained by:
 
 ```
