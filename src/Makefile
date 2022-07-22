@@ -17,7 +17,11 @@ CUTDOMAIN_LENGTH_CUTOFF := 220
 REFSEQ_FATOWHOLEALN_HHALIGN_E := 0.01
 OWNSEQ_FATOWHOLEALN_HHALIGN_E := 0.01
 
-IQTREE_PARAMETERS := --alrt 2000 -B 2000 --nmax 2000
+IQTREE_ALRT := 2000
+IQTREE_B := 2000
+IQTREE_NMAX := 2000
+IQTREE_PARAMETERS := --alrt $(IQTREE_ALRT) -B $(IQTREE_B) --nmax $(IQTREE_NMAX)
+IQTREE_CPU := AUTO
 
 SRC := ../src
 RESULTS := ../results
@@ -74,7 +78,7 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/own_ref_hhalign.
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i own_ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T AUTO
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.treefile own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
 # OwnseqAlnToRefseq
@@ -172,7 +176,7 @@ $(RESULTS)/ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/ref_hhalign.fasta_ch
 
 $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T AUTO
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.treefile ref_hhalign.fasta_checked.fasta.iqtree2.tre
 
 # RefseqAlnNotPassedFas
