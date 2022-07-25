@@ -76,10 +76,14 @@ $(RESULTS)/OrViT.ownseq_refseq.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fa
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.iqtree2.tre own_ref_hhalign.fasta_checked.fasta.tre
 
-$(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i own_ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
+$(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.model
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl own_ref_hhalign.fasta_checked.fasta.model) && iqtree2 -s own_ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.treefile own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
+
+$(RESULTS)/own_ref_hhalign.fasta_checked.fasta.model : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta
+	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i own_ref_hhalign.fasta_checked.fasta
+	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.out own_ref_hhalign.fasta_checked.fasta.model
+
 
 # OwnseqAlnToRefseq
 
@@ -174,10 +178,13 @@ $(RESULTS)/protid_taxid_rank.list : $(RESULTS)/refseq_hmmsearch_tblout.prot.fast
 $(RESULTS)/ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.iqtree2.tre ref_hhalign.fasta_checked.fasta.tre
 
-$(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i ref_hhalign.fasta_checked.fasta
-	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.out) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
+$(RESULTS)/ref_hhalign.fasta_checked.fasta.iqtree2.tre : $(RESULTS)/ref_hhalign.fasta_checked.fasta.model
+	cd $(RESULTS) && model=$$(perl $(SRC)/my_pick_modeltest-ng_iqtree.pl ref_hhalign.fasta_checked.fasta.model) && iqtree2 -s ref_hhalign.fasta_checked.fasta -m $${model} $(IQTREE_PARAMETERS) -T $(IQTREE_CPU)
 	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.treefile ref_hhalign.fasta_checked.fasta.iqtree2.tre
+
+$(RESULTS)/ref_hhalign.fasta_checked.fasta.model : $(RESULTS)/ref_hhalign.fasta_checked.fasta
+	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i ref_hhalign.fasta_checked.fasta
+	cd $(RESULTS) && cp ref_hhalign.fasta_checked.fasta.out ref_hhalign.fasta_checked.fasta.model
 
 # RefseqAlnNotPassedFas
 
