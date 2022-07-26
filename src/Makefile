@@ -24,12 +24,14 @@ IQTREE_NMAX := 2000
 IQTREE_PARAMETERS := --alrt $(IQTREE_ALRT) -B $(IQTREE_B) --nmax $(IQTREE_NMAX)
 IQTREE_CPU := AUTO
 
+NEIGHBOR := phylip neighbor
+
 SRC := ../src
 RESULTS := ../results
 CONTIGS := ../results/own_contigs.fasta
 SEQTYPE := nuc
 
-#prerequisite installations: curl wget hmmer parallel mafft usearch muscle hhalign phylip(neighbor) prodigal modeltest-ng iqtree2 usearch taxonkit jaligner(java)
+#prerequisite installations: curl wget hmmer parallel mafft usearch muscle hhalign phylip(neighbor) prodigal modeltest-ng iqtree2 taxonkit jaligner(java)
 ##install taxonkit
 #wget -c https://github.com/shenwei356/taxonkit/releases/download/v0.10.1/taxonkit_linux_amd64.tar.gz
 #tar xvfz taxonkit_linux_amd64.tar.gz
@@ -85,7 +87,6 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.model : $(RESULTS)/own_ref_hhalig
 	cd $(RESULTS) && modeltest-ng -p $(CPU) -d aa -t mp -T raxml --force -i own_ref_hhalign.fasta_checked.fasta
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.out own_ref_hhalign.fasta_checked.fasta.model
 
-
 # OwnseqAlnToRefseq
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta : $(RESULTS)/own_ref_hhalign.fasta
@@ -125,7 +126,6 @@ $(RESULTS)/own_RDRP_domain.fasta : $(RESULTS)/own_hmmsearch_tblout.prot.fasta
 	cd $(RESULTS) && echo "RefseqID	BestJalignerPDBID	BestJalignerScore	CutDomainLength">own_log.jaligner.log && parallel -j$(CPU) bash $(SRC)/my_cut_RDRP_domain.sh $(SRC) {} own_log.jaligner.log :::: list
 	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec cat {} + >own_RDRP_domain.fasta
 	cd $(RESULTS) && sleep 10 && find . -type f -name "*.cut_RDRP_domain.fas" -exec rm {} + && rm split* list log.fas_split_each_fa.log
-
 
 # OwnseqStarrMethod
 
@@ -224,7 +224,7 @@ $(RESULTS)/r2.hhalign_iterations.fasta : $(RESULTS)/r2.upgma.nwk
 $(RESULTS)/r2.upgma.nwk : $(RESULTS)/r2.all.hhr.list
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r2.all.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_distance_to_phylip_input.pl hhalign_distances.matrix
-	cd $(RESULTS) && phylip neighbor <$(SRC)/my_neighbor_parameter
+	cd $(RESULTS) && $(NEIGHBOR) <$(SRC)/my_neighbor_parameter
 	cd $(RESULTS) && perl $(SRC)/my_tree_to_oneline.pl
 	cd $(RESULTS) && cat upgma.nwk.temp0 | perl -p -i -e 's/:(\d+\.\d+)(\,)/\,/g' >upgma.nwk.temp1
 	cd $(RESULTS) && cat upgma.nwk.temp1 | perl -p -i -e 's/:(\d+\.\d+)(\))/\)/g' >upgma.nwk.temp2
@@ -282,7 +282,7 @@ $(RESULTS)/r1.hhalign_iterations.fasta : $(RESULTS)/r1.upgma.nwk
 $(RESULTS)/r1.upgma.nwk : $(RESULTS)/r1.all.hhr.list
 	cd $(RESULTS) && n=$$(ls u*.fas | wc -l) && perl $(SRC)/my_hhrscore_to_distance.pl $$n r1.all.hhr.list
 	cd $(RESULTS) && perl $(SRC)/my_distance_to_phylip_input.pl hhalign_distances.matrix
-	cd $(RESULTS) && phylip neighbor <$(SRC)/my_neighbor_parameter
+	cd $(RESULTS) && $(NEIGHBOR) <$(SRC)/my_neighbor_parameter
 	cd $(RESULTS) && perl $(SRC)/my_tree_to_oneline.pl
 	cd $(RESULTS) && cat upgma.nwk.temp0 | perl -p -i -e 's/:(\d+\.\d+)(\,)/\,/g' >upgma.nwk.temp1
 	cd $(RESULTS) && cat upgma.nwk.temp1 | perl -p -i -e 's/:(\d+\.\d+)(\))/\)/g' >upgma.nwk.temp2
