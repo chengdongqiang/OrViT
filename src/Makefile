@@ -39,8 +39,8 @@ SEQTYPE := nuc
 #tar -zxvf taxdump.tar.gz
 #mkdir -p $HOME/.taxonkit
 #cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
-REQUIRED_CMDS := bash perl test gunzip parallel curl wget hmmsearch hmmconvert mafft usearch muscle hhalign phylip modeltest-ng iqtree2 taxonkit prodigal java
-$(foreach cmd,$(REQUIRED_CMDS),$(if $(shell command -v $(cmd) 2> /dev/null),$(info Found `$(cmd)`),$(error Please install `$(cmd)`) command))
+REQUIRED_CMDS := bash perl test gunzip parallel curl wget hmmsearch hmmconvert mafft usearch muscle hhalign modeltest-ng iqtree2 taxonkit prodigal java
+$(foreach cmd,$(REQUIRED_CMDS),$(if $(shell command -v $(cmd) 2> /dev/null),$(info Found `$(cmd)`),$(error Please install `$(cmd)` command)))
 
 #PF03431	RNA_replicase_B
 #PF00946	Mononeg_RNA_pol
@@ -74,7 +74,7 @@ $(RESULTS)/OrViT.ownseq_refseq.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fa
 	cd $(RESULTS) && perl $(SRC)/my_tree_leaf_rename_ownseq.pl own_ref_hhalign.fasta_checked.fasta.tre.tre own_hmmsearch_tblout.prot.newid.list
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.tre.tre.tre OrViT.ownseq_refseq.tre
 
-#OwnseqRefseqPhylogenyTree
+# OwnseqRefseqPhylogenyTree
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.tre : $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.iqtree2.tre
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.iqtree2.tre own_ref_hhalign.fasta_checked.fasta.tre
@@ -208,7 +208,7 @@ $(RESULTS)/r2.eachfatotemplate.hhr.list : $(RESULTS)/refseq_RDRP_domain.fasta $(
 	cd $(RESULTS) && parallel -j$(CPU) bash {} ">" {}.hhr :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.hhr >r2.eachfatotemplate.hhr
 	cd $(RESULTS) && perl $(SRC)/my_hhr_to_list.pl r2.eachfatotemplate.hhr
-	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && && rm hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r2.eachfatotemplate.hhr
+	cd $(RESULTS) && sleep 10 && find . -type f -name "*.fa" -exec rm {} + && rm hhalign_eachfatotemplate_cmd split* list log.fas_split_each_fa.log r2.eachfatotemplate.hhr
 
 # Refseq.r2.WolfMethod
 
