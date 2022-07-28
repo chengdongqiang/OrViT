@@ -1,13 +1,13 @@
-###OrViT, a pipeline that integrates and updates published methods [Starr’s method (Starr et al., 2019) and Wolf’s method (Wolf et al., 2018)] and bridges various public software [Prodigal (Hyatt et al., 2010), HMMER (hmmer.org), JAligner (Moustafa, 2014), Mafft (Katoh and Standley, 2013), Usearch (Edgar, 2010), MUSCLE (Edgar, 2021), HHsuite (Steinegger et al., 2019), PHYLIP (Felsenstein, 2005), Modeltest-ng (Darriba et al., 2019), IQ-TREE 2 (Minh et al., 2020), and Taxonkit (Shen and Ren, 2021)] to generate a global phylogenetic tree of Orthornavirae with minimal input from the user. OrViT can be used to annotate RNA viruses from user's samples.
+### OrViT, a pipeline that integrates and updates published methods [Starr’s method (Starr et al., 2019) and Wolf’s method (Wolf et al., 2018)] and bridges various public software [Prodigal (Hyatt et al., 2010), HMMER (hmmer.org), JAligner (Moustafa, 2014), Mafft (Katoh and Standley, 2013), Usearch (Edgar, 2010), MUSCLE (Edgar, 2021), HHsuite (Steinegger et al., 2019), PHYLIP (Felsenstein, 2005), Modeltest-ng (Darriba et al., 2019), IQ-TREE 2 (Minh et al., 2020), and Taxonkit (Shen and Ren, 2021)] to generate a global phylogenetic tree of Orthornavirae with minimal input from the user. OrViT can be used to annotate RNA viruses from user's samples.
 
-###This pipeline will output the OrthornaVirae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
+### This pipeline will output the OrthornaVirae phylogenetic Tree (OrViT.refseq.tre or OrViT.ownseq_refseq.tre) and the multiple sequences alignments of RdRp core domain (OrViT.refseq.aln or OrViT.ownseq_refseq.aln) using sequences from RefSeq viral proteins database and the user's assembled contigs.
 ###Dong-Qiang Cheng (Email: chengdongqiang@gmail.com), Federico M. Lauro (Email: flauro@ntu.edu.sg)
 
 ### GNU Make Standard Library (gmsl) by John Graham-Cumming was downloaded from http://gmsl.sourceforge.net -- put both gmsl and __gmsl in the same directory
 include gmsl
 ### JAligner (Open source Java implementation of Smith-Waterman) by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
 
-###The GNU parallel was implemented for parallel computation. The GNU parallel by Ole Tange was cited here: Tange, O. (2021, August 22). GNU Parallel 20210822 ('Kabul'). Zenodo. https://doi.org/10.5281/zenodo.5233953
+### The GNU parallel was implemented for multiple serial command lines parallel running. The GNU parallel by Ole Tange was cited here: Tange, O. (2021, August 22). GNU Parallel 20210822 ('Kabul'). Zenodo. https://doi.org/10.5281/zenodo.5233953
 
 CPU := 50
 
