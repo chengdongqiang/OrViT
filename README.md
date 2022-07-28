@@ -82,8 +82,14 @@ Reattach the screen terminal session: Run "screen -ls" to check the screen_sessi
 
 **Example 2: user's input file as the assembly contigs are DNA sequences**
 
-The path for user’s assembled contigs supposed as: ~/TARA_9samples_contigs.fasta
-
+Download the assembled contigs:
+```
+wget https://zenodo.org/record/6918781/files/TARA_9samples_contigs.fasta.tar.gz
+```
+Uncompresses and untars the file:
+```
+tar -xvfz TARA_9samples_contigs.fasta.tar.gz
+```
 Start a terminal multiplexer 'screen':
 ```
 screen
@@ -96,7 +102,7 @@ Go to 'Makefile' containing folder:
 ```
 cd OrViT/src
 ```
-Run the whole pipeline with user specified parameters:
+Run the whole pipeline with user specified parameters (The path for user’s assembled contigs supposed as: ~/TARA_9samples_contigs.fasta):
 ```
 make CONTIGS=~/TARA_9samples_contigs.fasta
 ```
