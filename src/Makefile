@@ -26,7 +26,8 @@ IQTREE_NMAX := 2000
 IQTREE_PARAMETERS := --alrt $(IQTREE_ALRT) -B $(IQTREE_B) --nmax $(IQTREE_NMAX)
 IQTREE_CPU := AUTO
 
-NEIGHBOR := phylip neighbor
+#NEIGHBOR := phylip neighbor
+NEIGHBOR := neighbor
 
 SRC := ../src
 RESULTS := ../results
