@@ -51,3 +51,48 @@ make refseq
 #### **Outputs**
 The outputs will be available in OrViT/results directory. OrViT.refseq.aln and OrViT.ownseq_refseq.aln contain the multiple sequence alignments of the RdRp core domain. OrViT.refseq.tre and OrViT.ownseq_refseq.tre are the phylogenetic trees based on these alignments.
 
+### **Examples**
+#### **Example 1: user's input as the assembly contigs are DNA sequences**
+The path for user’s assembled contigs supposed as: ~/TARA_9samples_contigs.fasta
+
+Start a terminal multiplexer 'screen':
+```
+screen
+```
+Download OrViT pipeline:
+```
+git clone https://github.com/chengdongqiang/OrViT.git
+```
+Go to 'Makefile' containing folder:
+```
+cd OrViT/src
+```
+Run the whole pipeline with user specified parameters:
+```
+make CONTIGS=~/TARA_9samples_contigs.fasta
+```
+Detach the screen terminal session: Press Control+A and Control+D
+Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+
+#### **Example 2: user's input as proteins sequences**
+
+Start a terminal multiplexer 'screen':
+```
+screen
+```
+Download OrViT pipeline:
+```
+git clone https://github.com/chengdongqiang/OrViT.git
+```
+Go to 'Makefile' containing folder:
+```
+cd OrViT/src
+```
+We provide an example in the OrViT/examples/TARA_483samples_RdRp_canditates_cdhit09.fasta
+Run the whole pipeline with user specified parameters:
+```
+make CONTIGS=../examples/TARA_483samples_RdRp_canditates_cdhit09.fasta SEQTYPE=pro HMMSEARCH_E=0.05 OWNSEQ_FATOWHOLEALN_HHALIGN_E=0.05
+```
+Detach the screen terminal session: Press Control+A and Control+D
+Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+
