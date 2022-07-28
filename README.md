@@ -78,7 +78,7 @@ make refseq CPU=50
 ```
 Detach the screen terminal session: Press Control+A and Control+D
 
-Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
 
 **Example 2: user's input file as the assembly contigs are DNA sequences**
 
@@ -102,7 +102,7 @@ make CONTIGS=~/TARA_9samples_contigs.fasta
 ```
 Detach the screen terminal session: Press Control+A and Control+D
 
-Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
 
 **Example 3: user's input file contains proteins sequences**
 
@@ -126,5 +126,5 @@ make CONTIGS=../examples/TARA_483samples_RdRp_canditates_cdhit09.fasta SEQTYPE=p
 ```
 Detach the screen terminal session: Press Control+A and Control+D
 
-Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
 
