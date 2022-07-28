@@ -12,7 +12,7 @@ The GNU Make Standard Library (gmsl) was included in OrViT/src. The gmsl by John
 
 The JAligner (Open source Java implementation of Smith-Waterman) was also included in OrViT/src. The JAligner by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
 
-The GNU parallel was implemented for parallel computation. The GNU parallel by Ole Tange was cited as: O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
+The GNU parallel was implemented for parallel computation. The GNU parallel by Ole Tange was cited here: Tange, O. (2021, August 22). GNU Parallel 20210822 ('Kabul'). Zenodo. https://doi.org/10.5281/zenodo.5233953.
 
 ### **Usage**
 The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile. Makefile has set some default variables, such as CPU=50, IQTREE_CPU=AUTO, HMMSEARCH_E=0.01, OWNSEQ_FATOWHOLEALN_HHALIGN_E=0.01, REFSEQ_FATOWHOLEALN_HHALIGN_E=0.01, which can be specified by the user.

@@ -7,6 +7,8 @@
 include gmsl
 ### JAligner (Open source Java implementation of Smith-Waterman) by Ahmed Moustafa was downloaded from http://jaligner.sourceforge.net 
 
+###The GNU parallel was implemented for parallel computation. The GNU parallel by Ole Tange was cited here: Tange, O. (2021, August 22). GNU Parallel 20210822 ('Kabul'). Zenodo. https://doi.org/10.5281/zenodo.5233953
+
 CPU := 50
 
 HMMSEARCH_E := 0.01
