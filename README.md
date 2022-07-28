@@ -19,7 +19,7 @@ The OrViT pipeline consists of Perl and Bash scripts, assembled into a Makefile.
 
 We recommend the use of a terminal multiplexer such as ‘screen’ to ensure the completion of the long-running task.
 
-##### **OrViT.ownseq_refseq.tre**
+**OrViT.ownseq_refseq.tre**
 A global tree (OrViT.ownseq_refseq.tre) based on sequences from both user’s assembled contigs and the RefSeq viral proteins database can be obtained by:
 ```
 git clone https://github.com/chengdongqiang/OrViT.git
@@ -35,7 +35,7 @@ Or user's input contigs as protein sequences:
 make CONTIGS=/path/to/your/contigs.fasta SEQTYPE=pro
 ```
 
-##### **OrViT.refseq.tre**
+**OrViT.refseq.tre**
 The global tree (OrViT.refseq.tre) based on sequences only from the RefSeq viral proteins database can be obtained by:
 
 ```
@@ -48,11 +48,33 @@ cd OrViT/src
 make refseq
 ```
 
-##### **Outputs**
+**Outputs**
 The outputs will be available in OrViT/results directory. OrViT.refseq.aln and OrViT.ownseq_refseq.aln contain the multiple sequence alignments of the RdRp core domain. OrViT.refseq.tre and OrViT.ownseq_refseq.tre are the phylogenetic trees based on these alignments.
 
 ### **Examples**
-##### **Example 1: user's input as the assembly contigs are DNA sequences**
+**Example 1: Obtaining a global tree based on sequences only from the RefSeq database**
+
+Start a terminal multiplexer 'screen':
+```
+screen
+```
+Download OrViT pipeline:
+```
+git clone https://github.com/chengdongqiang/OrViT.git
+```
+Go to 'Makefile' containing folder:
+```
+cd OrViT/src
+```
+Run the whole pipeline with user specified parameters:
+```
+make refseq CPU=50
+```
+Detach the screen terminal session: Press Control+A and Control+D
+
+Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+
+**Example 2: user's input as the assembly contigs are DNA sequences**
 The path for user’s assembled contigs supposed as: ~/TARA_9samples_contigs.fasta
 
 Start a terminal multiplexer 'screen':
@@ -75,7 +97,7 @@ Detach the screen terminal session: Press Control+A and Control+D
 
 Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
 
-##### **Example 2: user's input as proteins sequences**
+**Example 3: user's input as proteins sequences**
 We provide an example as proteins sequences in the path: OrViT/examples/TARA_483samples_RdRp_canditates_cdhit09.fasta
 
 Start a terminal multiplexer 'screen':
