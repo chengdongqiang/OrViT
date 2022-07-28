@@ -58,7 +58,7 @@ The outputs will be available in OrViT/results directory. OrViT.refseq.aln and O
 
 
 ### **Examples**
-**Example 1: Obtaining a global tree based on sequences only from the RefSeq database**
+**Example 1: obtaining a global tree based on sequences only from the RefSeq database**
 
 Start a terminal multiplexer 'screen':
 ```
