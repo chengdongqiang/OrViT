@@ -76,9 +76,9 @@ Run the whole pipeline with user specified parameters:
 ```
 make refseq CPU=50
 ```
-Detach the screen terminal session: Press Control+A and Control+D
+Detach the screen terminal session: press Control+A and Control+D
 
-Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: run "screen -ls" to check the screen_session_ID, and run "screen -r screen_session_ID" to reattach.
 
 **Example 2: user's input file as the assembly contigs are DNA sequences**
 
@@ -106,9 +106,9 @@ Run the whole pipeline with user specified parameters (The path for user’s ass
 ```
 make CONTIGS=~/TARA_9samples_contigs.fasta
 ```
-Detach the screen terminal session: Press Control+A and Control+D
+Detach the screen terminal session: press Control+A and Control+D
 
-Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: run "screen -ls" to check the screen_session_ID, and run "screen -r screen_session_ID" to reattach.
 
 **Example 3: user's input file contains proteins sequences**
 
@@ -130,7 +130,7 @@ Run the whole pipeline with user specified parameters:
 ```
 make CONTIGS=../examples/TARA_483samples_RdRp_canditates_cdhit09.fasta SEQTYPE=pro HMMSEARCH_E=0.05 OWNSEQ_FATOWHOLEALN_HHALIGN_E=0.05
 ```
-Detach the screen terminal session: Press Control+A and Control+D
+Detach the screen terminal session: press Control+A and Control+D
 
-Reattach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
+Reattach the screen terminal session: run "screen -ls" to check the screen_session_ID, and run "screen -r screen_session_ID" to reattach.
 
