@@ -84,7 +84,7 @@ Reattach the screen terminal session: Run "screen -ls" to check the screen_sessi
 
 Download the assembled contigs:
 ```
-wget https://zenodo.org/record/6918781/files/TARA_9samples_contigs.fasta.tar.gz
+wget -c https://zenodo.org/record/6918781/files/TARA_9samples_contigs.fasta.tar.gz
 ```
 Uncompresses and untars the file:
 ```
