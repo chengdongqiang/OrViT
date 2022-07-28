@@ -76,6 +76,7 @@ Detach the screen terminal session: Press Control+A and Control+D
 Re-attach the screen terminal session: Run "screen -ls" to check the screen_session_ID, and "screen -r screen_session_ID" to reattach.
 
 #### **Example 2: user's input as proteins sequences**
+We provide an example as proteins sequences in the path: OrViT/examples/TARA_483samples_RdRp_canditates_cdhit09.fasta
 
 Start a terminal multiplexer 'screen':
 ```
@@ -89,8 +90,6 @@ Go to 'Makefile' containing folder:
 ```
 cd OrViT/src
 ```
-We provide an example in the OrViT/examples/TARA_483samples_RdRp_canditates_cdhit09.fasta.
-
 Run the whole pipeline with user specified parameters:
 ```
 make CONTIGS=../examples/TARA_483samples_RdRp_canditates_cdhit09.fasta SEQTYPE=pro HMMSEARCH_E=0.05 OWNSEQ_FATOWHOLEALN_HHALIGN_E=0.05
