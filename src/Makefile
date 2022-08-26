@@ -93,8 +93,9 @@ $(RESULTS)/own_ref_hhalign.fasta_checked.fasta.model : $(RESULTS)/own_ref_hhalig
 # OwnseqAlnToRefseq
 
 $(RESULTS)/own_ref_hhalign.fasta_checked.fasta : $(RESULTS)/own_ref_hhalign.fasta
-	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl own_ref_hhalign.fasta
-	cd $(RESULTS) && perl $(SRC)/my_hhalign_iterations_checked.pl own_ref_hhalign.fasta.consensus own_ref_hhalign.fasta
+	cd $(RESULTS) && perl $(SRC)/my_pick_ref_aln.pl own_ref_hhalign.fasta
+	cd $(RESULTS) && perl $(SRC)/my_alignments_to_consensus.pl own_ref_hhalign.fasta.pick_ref.fasta
+	cd $(RESULTS) && perl $(SRC)/my_hhalign_iterations_checked.pl own_ref_hhalign.fasta.pick_ref.fasta.consensus own_ref_hhalign.fasta
 	cd $(RESULTS) && perl $(SRC)/my_aln_id_rename_ownseq.pl own_ref_hhalign.fasta_checked.fasta own_hmmsearch_tblout.prot.newid.list
 	cd $(RESULTS) && cp own_ref_hhalign.fasta_checked.fasta.aln OrViT.ownseq_refseq.aln
 
