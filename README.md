@@ -5,7 +5,6 @@ OrViT, a pipeline that integrates and improves on two published approaches (the 
 
 The novel aspect of OrViT is the ability to identify the RdRp core domain using sequences that are distantly related and from high-quality pairwise structural alignments. By excising the RdRp core motifs, the pipeline is guaranteed to produce high-quality sequence alignments and phylogenetic trees. Additionally, the integrated pipeline greatly simplifies the challenging Orthornavirae annotation analyses.
 
-CITATION
 Cheng D-Q, Kolundž ija S and Lauro FM (2022) Global phylogenetic analysis of the RNAdependent RNA polymerase with OrViT (OrthornaVirae Tree). Front. Virol. 2:981177. doi: 10.3389/fviro.2022.981177 https://doi.org/10.3389/fviro.2022.981177
 
 ### **Prerequisites**
