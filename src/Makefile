@@ -346,7 +346,7 @@ $(RESULTS)/all.hmm : $(HMMFILES) $(RESULTS)/Cystoviridae_convert.hmm
 	cd $(RESULTS) && sleep 10 && cat *_convert.hmm > all.hmm
 
 $(HMMFILES) : | $(RESULTS)
-	cd $(RESULTS) && curl -o $(call substr,$(@F),1,7).hmm http://pfam.xfam.org/family/$(call substr,$(@F),1,7)/hmm
+	cd $(RESULTS) && curl -o $(call substr,$(@F),1,7).hmm http://pfam-legacy.xfam.org/family/$(call substr,$(@F),1,7)/hmm
 	cd $(RESULTS) && hmmconvert $(call substr,$(@F),1,7).hmm > $(@F) && rm $(call substr,$(@F),1,7).hmm 
 
 $(RESULTS)/Cystoviridae_convert.hmm : | $(RESULTS)
