@@ -59,8 +59,6 @@ $(foreach cmd,$(REQUIRED_CMDS),$(if $(shell command -v $(cmd) 2> /dev/null),$(in
 #PF07727	RVT_2
 #PF04197	Birna_RdRp
 #Cystoviridae
-HMMS := PF03431 PF00946 PF07925 PF00972 PF04196 PF05919 PF00680 PF00978 PF00998 PF02123 PF00078 PF07727 PF04197
-HMMFILES := $(patsubst %,$(RESULTS)/%_convert.hmm,$(HMMS))
 
 #################################################################################################################################
 .PHONY : all
@@ -342,16 +340,8 @@ $(RESULTS)/refseq_viral_proteins.fasta : | $(RESULTS)
 
 # DownloadHMM
 
-$(RESULTS)/all.hmm : $(HMMFILES) $(RESULTS)/Cystoviridae_convert.hmm
-	cd $(RESULTS) && sleep 10 && cat *_convert.hmm > all.hmm
-
-$(HMMFILES) : | $(RESULTS)
-	cd $(RESULTS) && curl -o $(call substr,$(@F),1,7).hmm http://pfam-legacy.xfam.org/family/$(call substr,$(@F),1,7)/hmm
-	cd $(RESULTS) && hmmconvert $(call substr,$(@F),1,7).hmm > $(@F) && rm $(call substr,$(@F),1,7).hmm 
-
-$(RESULTS)/Cystoviridae_convert.hmm : | $(RESULTS)
-	cd $(RESULTS) && wget -c https://figshare.com/ndownloader/files/15584354 -O Cystoviridae.hmm
-	cd $(RESULTS) && hmmconvert Cystoviridae.hmm >Cystoviridae_convert.hmm && rm Cystoviridae.hmm
+$(RESULTS)/all.hmm : | $(RESULTS)
+	cd $(RESULTS) && cp $(SRC)/all.hmm ./
 
 .PHONY : CommandsCheck
 CommandsCheck : | $(RESULTS)
