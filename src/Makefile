@@ -146,7 +146,7 @@ endif
 
 $(RESULTS)/own_nuc :  $(RESULTS)/own_contigs.fasta
 	cd $(RESULTS) && sleep 5 && touch own_nuc
-	cd $(RESULTS) && l=$$(wc -l own_contigs.fasta| cut -f1 -d' ') && m=$$((l / $(CPU))) && n=$$((m+2)) && split -l $$n own_contigs.fasta split && ls split* >list
+	cd $(RESULTS) && l=$$(wc -l own_contigs.fasta| cut -f1 -d' ') && m=$$((l / $(CPU))) && if [ $$((m%2)) -eq 0 ]; then n=$$((m+2)); else n=$$((m+3)); fi && split -l $$n own_contigs.fasta split && ls split* >list
 	cd $(RESULTS) && parallel -j$(CPU) prodigal -i {} -o {}.prodigal.gbk -a {}.prodigal_proteins.fas -d {}.prodigal_genes.fas -p meta :::: list
 	cd $(RESULTS) && sleep 10 && cat split*.prodigal_proteins.fas >own_proteins.fasta && cat split*.prodigal.gbk >own_proteins.gbk && cat split*.prodigal_genes.fas >own_proteins.genes.fasta
 	cd $(RESULTS) && sleep 10 && rm split* list
