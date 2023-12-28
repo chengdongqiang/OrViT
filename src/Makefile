@@ -333,7 +333,15 @@ $(RESULTS)/refseq_hmmsearch_tblout.prot.fasta : $(RESULTS)/all.hmm $(RESULTS)/re
 	cd $(RESULTS) && sleep 10 && rm refseq_hmmsearch_out refseq_hmmsearch_tblout
 
 $(RESULTS)/refseq_viral_proteins.fasta : | $(RESULTS)
-	-cd $(RESULTS) && curl -O ftp.ncbi.nih.gov/refseq/release/viral/viral.[1-9].protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.1.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.2.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.3.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.4.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.5.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.6.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.7.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.8.protein.faa.gz
+	-cd $(RESULTS) && curl -O ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.9.protein.faa.gz
 	cd $(RESULTS) && gunzip viral*.gz
 	cd $(RESULTS) && sleep 10 && cat viral.*.protein.faa >refseq_viral_proteins.fasta
 	cd $(RESULTS) && sleep 10 && rm viral.*.protein.faa
